@@ -1,0 +1,345 @@
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    min-width: 1300px;
+    background: url(../img/bg.jpg);
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: 115%;
+    height: 100%;
+}
+html {
+    background-color: #000;
+}
+#app {
+    margin-top: 60px;
+}
+.application {
+    visibility: hidden;
+}
+.visible {
+    visibility: visible;
+}
+hr {
+    opacity: 0.25;
+    border-bottom: 2px solid white;
+}
+.well-sm {
+    padding: 8px;
+    border-radius: 0;
+}
+.price, strong, b {
+    font-weight: 700;
+}
+.dota-items {
+    width: 100%;
+    height: 300px;
+    overflow: auto;
+    display: block;
+}
+.dota-items.high {
+    height: 420px;
+}
+.dota-items .well {
+    border-radius: 0;
+    margin: 0;
+}
+.dota-item {
+    width: 24%;
+    min-height: 80px;
+    margin: 2px;
+    background: rgba(0, 0, 0, .05);
+    float: left;
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    border-right: 1px solid rgba(0, 0, 0, .05);
+}
+.dota-item[disabled] {
+    pointer-events: none;
+    opacity: .75;
+}
+.dota-item[disabled]:before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+    background: rgba(0, 0, 0, .1);
+    z-index: 2;
+}
+.dota-item:hover {
+    cursor: pointer;
+}
+.dota-item:hover .dota-item--bg {
+    background-size: 85%;
+    transition: all 0.30s ease-out;
+}
+.dota-item:hover .dota-item--title {
+    visibility: visible;
+    z-index: 999;
+}
+.dota-item--arcana:hover {
+    background: #ADE55C;
+}
+.dota-item--immortal:hover {
+    background: #e4ae39;
+}
+.dota-item--rare_skin:hover {
+    background: #3cb4f0;
+}
+.dota-item--mythical:hover {
+    background: #bea0ff;
+}
+.dota-item--legendary:hover{
+    background: #f775f7;
+}
+.dota-item--uncommon:hover {
+    background: #5e98d9;
+}
+.dota-item--misc:hover {
+    background: #b0c3d9;
+}
+
+.dota-item {
+    background: #FDFDFD;
+}
+.dota-item--bg {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background-position: center center;
+    background-size: 80%;
+    background-repeat: no-repeat;
+}
+.dota-item--st {
+    position: absolute;
+    top: 5px; left: 5px;
+    color: orange;
+    font-weight: 700;
+    padding: 1px 3px;
+    z-index: 2;
+}
+.dota-item--wear {
+    position: absolute;
+    top: 5px; right: 5px;
+    background: rgba(0, 0, 0, .1);
+    padding: 1px 3px;
+    z-index: 2;
+}
+.dota-item--price {
+    position: absolute;
+    bottom: -7px; left: -10px; right: 0;
+    text-align: center;
+    z-index: 2;
+    vertical-align: top;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 800;
+    padding: 5px;
+    text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+    margin: 0 0 9px 9px;
+    outline: none;
+    cursor: pointer;
+}
+.dota-item--float {
+    font-size: 11px;
+    color: yellow;
+    line-height: 1em;
+}
+.dota-item--title {
+    visibility: hidden;
+    width: 100%;
+    top: 100%;
+    background: rgba(0, 0, 0, .8);
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    padding: 14px 3px;
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    line-height: 1em;
+    font-weight: bold;
+}
+.dota-item--title:after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, .8) transparent transparent transparent;
+}
+
+.dropdown-menu a {
+    cursor: pointer;
+}
+.navbar {
+    border-radius: 0;
+}
+.has-avatar {
+    padding-left: 60px !important;
+}
+.img-avatar {
+    width: 32px;
+    border-radius: 999px;
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.dota-items .alert {
+    border-radius: 0;
+}
+
+.alert-info {
+    float:right;
+}
+
+footer.footer {
+    border-top-width: 1px;
+    border-top-style: solid;
+    padding: 15px 0;
+    width: 100%;
+}
+
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+#loader {
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #3498db;
+
+    -webkit-animation: spin 2s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
+    animation: spin 2s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+}
+
+.loader-logo {
+    position: fixed;
+    z-index: 1005;
+    display: block;
+    position: relative;
+    left: 42%;
+    top: 15%;
+    width: 300px;
+    height: 300px;
+    margin: -75px 0 0 -75px;
+    font-size: 55px;
+}
+
+#loader:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #e74c3c;
+
+    -webkit-animation: spin 3s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
+    animation: spin 3s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+}
+
+#loader:after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #f9c922;
+
+    -webkit-animation: spin 1.5s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
+    animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+}
+
+@-webkit-keyframes spin {
+    0%   {
+        -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(0deg);  /* IE 9 */
+        transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+    100% {
+        -webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(360deg);  /* IE 9 */
+        transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+}
+@keyframes spin {
+    0%   {
+        -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(0deg);  /* IE 9 */
+        transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+    100% {
+        -webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(360deg);  /* IE 9 */
+        transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+}
+
+
+#loader-wrapper .loader-section {
+    position: fixed;
+    top: 0;
+    width: 51%;
+    height: 100%;
+    background: #222222;
+    z-index: 1000;
+}
+
+#loader-wrapper .loader-section.section-left {
+    left: 0;
+}
+
+#loader-wrapper .loader-section.section-right {
+    right: 0;
+}
+
+#loader {
+    z-index: 1002; /* anything higher than z-index: 1000 of .loader-section */
+}
+
+/* Loaded */
+.loaded #loader-wrapper .loader-section.section-left {
+    -webkit-transform: translateX(-100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+    -ms-transform: translateX(-100%);  /* IE 9 */
+    transform: translateX(-100%);  /* Firefox 16+, IE 10+, Opera */
+}
+
+.loaded #loader-wrapper .loader-section.section-right {
+    -webkit-transform: translateX(100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+    -ms-transform: translateX(100%);  /* IE 9 */
+    transform: translateX(100%);  /* Firefox 16+, IE 10+, Opera */
+}
+
+.loaded #loader {
+    opacity: 0;
+    -webkit-transform: translateX(100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+    -ms-transform: translateX(100%);  /* IE 9 */
+    transform: translateX(100%);  /* Firefox 16+, IE 10+, Opera */
+}
+
+.loaded #loader-wrapper {
+    visibility: hidden;
+    -webkit-transform: translateX(-100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+    -ms-transform: translateX(-100%);  /* IE 9 */
+    transform: translateX(-100%);  /* Firefox 16+, IE 10+, Opera */
+}

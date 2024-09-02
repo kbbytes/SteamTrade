@@ -1,0 +1,23 @@
+{
+    "Scavenging Guttleslug":
+    {    
+        "nameID": 1111111,
+        "market_hash_name": "Scavenging Guttleslug",
+        "market_name": "Scavenging Guttleslug",
+        "price": 3.5
+    },
+    "Demon Eater":
+    {    
+        "nameID": 2222222222,
+        "market_hash_name": "Demon Eater",
+        "market_name": "Demon Eater",
+        "price": 6
+    },
+    "Bladeform Legacy":
+    {
+        "nameID": 333333333333,
+        "market_hash_name": "Bladeform Legacy",
+        "market_name": "Bladeform Legacy",
+        "price": 34.99
+    }
+}

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=0">
+    <title>DotaTrade.ir | سایت مبادله ایتم دوتا 2</title>
+    <meta name="keywords" content="dotatrade, dota2trade, dota2 trade bot, dota2 trade, dota2 trading bot, dota, dota2, trading bot, trade bot, dota2 sell skins, dota2 skin bot, dota2 key bot, dota2 quicksell bot, dota2 exchange bot">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://unpkg.com/vue@2.1.8/dist/vue.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css?v=95">
+    <link rel="stylesheet" href="/static/css/loader.css?v=95">
+    <link rel="stylesheet" href="/static/css/fonts.css?v=95">
+    <link rel="stylesheet" href="/static/css/app.css?v=1">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <header class="header application">
+        <div class="wrapper clearfix"><a class="humb js-mobile-menu-trigger visible-xs"><i></i><i></i><i></i></a>
+
+                <div class="lang js-lang">
+                    <br>
+                    <div class="can-toggle demo-rebrand-2">
+                        <input id="language" name="language" type="checkbox" onclick="validate()">
+                        <label for="language">
+                            <div class="can-toggle__switch" data-checked="EN" data-unchecked="FA">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            <div id="apphead">
+                <div v-if=" ! user">
+                    <a href="/auth/steam">
+                        <div id="outer">
+                            <div id="sub-outer-top">
+                                <div id="inner">
+                                    <div id="sub-inner-top">
+                                        <i class="material-icons power fab fa-steam-symbol"></i>
+                                        <div id="inner-overlay">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="logo"><a href="/">Dota<span>Trade</span></a></div>
+        </div>
+        </div>
+    </header>
+</head>
+
+<body class="loaded">
+    <div id="loader-wrapper">
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+        <div id="loader"></div>
+        <div class="logo loader-logo">Dota<span>Trade</span></div>
+    </div>
+</body>
+
+<body>
+<div id="app" class="application">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                                <span><span class="well well-sm farsi"><strong>آیتم های انتخابی از شما</strong></span></span>
+                                <span><span class="well well-sm english" ><strong>Your offer</strong></span></span>
+                                <span class="price pull-right">
+                                <span class="well well-sm">${{ userInventorySelectedValue.toFixed(2) }}</span>
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="dota-items">
+                        <div class="well text-center">
+                            <strong class="farsi">&#9660; .برای پاک کردن آیتم های انتخابی بر روی آن کلیک کنید &#9660;</strong>
+                            <strong  class="english">&#9660; Select items below to remove them from the offer. &#9660;</strong>
+                        </div>
+                        <div class="dota-item dota-item--rare"
+                             :class="`dota-item--${item.item_type.name}`"
+                             v-for="item in userInventory"
+                             v-if="userInventorySelected.indexOf(item.assetid) !== -1"
+                             v-on:click="removeItem('user', item.assetid, item.price)"
+                        >
+                            <div class="dota-item--title">{{ item.data.market_hash_name }} <br> <br> {{ item.data.type }}</div>
+                            <div class="dota-item--st" v-if="item.data.market_hash_name.indexOf('StatTrak') !== -1">ST</div>
+                            <div class="dota-item--wear" v-if="item.item_wear">{{ item.item_wear }}</div>
+                            <div class="dota-item--price">${{ item.price }}</div>
+                            <div class="dota-item--bg" :style="`background-image:url(https://steamcommunity-a.akamaihd.net/economy/image/${item.data.image});`"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <div class="form-inline text-right">
+                                <a href="#" class="btn btn-default disabled pull-left farsi">آیتم های شما</a>
+                                <a href="#" class="btn btn-default disabled pull-left english">Your inventory</a>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Search For Items" v-on:keyup="searchInventory('user', $event.target.value)">
+                                    <div class="input-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle farsi" data-toggle="dropdown">مرتب سازی با
+                                            <span class="caret"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default dropdown-toggle english" data-toggle="dropdown">Sort by
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <a v-on:click="setInventorySort('user', true)" class="farsi">بالاترین قیمت</a>
+                                                <a v-on:click="setInventorySort('user', true)" class="english">Highest price</a>
+                                            </li>
+                                            <li>
+                                                <a v-on:click="setInventorySort('user', false)" class="farsi">پایین ترین قیمت</a>
+                                                <a v-on:click="setInventorySort('user', false)" class="english">Lowest price</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </h3>
+                    </div>
+                    <div class="dota-items high">
+                        <div class="well text-center">
+                            <strong class="farsi">&#9660; .آیتم مورد نظر خود را برای اضافه شدن به لیست پشنهادی خود انتخاب کنید &#9660;</strong>
+                            <strong class="english">&#9660; Select items below to place them in the offer. &#9660;</strong>
+                            </br>
+                        </div>
+                        <div v-if=" ! userInventory.error && userInventory.length">
+                            <div class="dota-item dota-item--rare"
+                                 :class="`dota-item--${item.item_type.name}`"
+                                 v-for="item in userInventory"
+                                 v-if=" ! item.hidden && userInventorySelected.indexOf(item.assetid) === -1"
+                                 v-on:click="addItem('user', item.assetid, item.price)"
+                                 :disabled="item.price <= rates.ignore"
+                            >
+                                <div class="dota-item--title">{{ item.data.market_hash_name }} <br> <br> <div :style="`color:${item.data.color}`">{{ item.data.type }}</div></div>
+                                <div class="dota-item--st" v-if="item.data.market_hash_name.indexOf('StatTrak') !== -1">ST</div>
+                                <div class="dota-item--wear" v-if="item.item_wear">{{ item.item_wear }}</div>
+                                <div class="dota-item--price" v-if="item.price > rates.ignore">${{ item.price }}</div>
+                                <div class="dota-item--price farsi" v-else>قیمت پایین</div>
+                                <div class="dota-item--price english" v-else>Too low</div>
+                                <div class="dota-item--bg" :style="`background-image:url(https://steamcommunity-a.akamaihd.net/economy/image/${item.data.image});`"></div>
+                            </div>
+                        </div>
+                        <div v-else-if="userInventory.error">
+                            <div v-if="userInventory.error.statusCode == 403">
+                                <div class="alert alert-danger" style="margin:0">
+                                    <strong class="farsi">پروفایل شما در تنظیمات شخصی قرار دارد, قابل مشاهده نیست inventory</strong>
+                                    <div class="farsi"><a href="http://steamcommunity.com/id/me/edit/settings" target="_blank" class="farsi">برای تغییر تنظیمات حریم خصوصی خود کلیک کنید.</a> بعد اعمال تغییرات برای <a href="#" class="farsi">تازه سازی فهرست ایتم ها اینجا کلیک کنید</a>.</div>
+                                    <strong class="english">Your profile or inventory settings are set to private. We can't acquire the items of your Dota 2 inventory.</strong>
+                                    <div class="english"><a href="http://steamcommunity.com/id/me/edit/settings" target="_blank" class="english">Change your Steam privacy settings here.</a> After that's done you can <a href="#" class="english">try reloading inventories</a>.</div>
+                                </div>
+                                <div class="alert alert-warning">
+                                    <strong class="farsi">.اگر مطمئن هستید تنظیمات حریم خصوصی شما عمومی هستند، لطفا با مدیر تماس بگیرید یا بعدا دوباره امتحان کنید</strong>
+                                    <div class="farsi">.گاهی اوقات Steam با عدم ثبات در سرورهای خود مواجه است. اطمینان حاصل کنید که Steam نقص نداشته باشد<a href="http://steamstat.us" target="_blank" class="farsi"><strong>اینجا</strong></a>.</div>
+                                    <strong class="english">If you're certain your privacy settings are public please contact the administrator or try again later.</strong>
+                                    <div class="english">Sometimes Steam has issues with its stability of the inventory servers. Make sure that Steam is not broken <a href="http://steamstat.us" target="_blank" class="english"><strong>here</strong></a>.</div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div class="alert alert-danger">
+                                    <strong v-if="userInventory.error.error">{{ userInventory.error.error }}</strong>
+                                    <strong v-else class="farsi">شتباهی رخ داده لطفا دوباره تلاش کنید!</strong>
+                                    <strong v-else class="english">Something went wrong.. please try again!</strong>
+                                    <span v-if="userInventory.error.statusCode">({{ userInventory.error.statusCode }})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else-if=" ! user.steamID64">
+                            <div class="alert alert-info farsi">.لطفا برای دیدن موجودی ایتم های خود احراز هویت کنید</div>
+                            <div class="alert alert-info english">Please authenticate to see your inventory.</div>
+                        </div>
+                        <div v-else>
+                            <div class="alert alert-info farsi"><img src="/static/img/load.gif" alt="">... لطفا صبر کنید </div>
+                            <div class="alert alert-info english"><img src="/static/img/load.gif" alt="">Please wait..</div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <!--/.col-->
+            <div class="col-xs-2">
+                <div v-if=" ! user" class="farsi">
+                    <div class="alert alert-info">
+                        <strong class="farsi">.قبل از اینکه بتوانید معاملات را ارسال کنید، باید وارد سیستم شوید</strong>
+                    </div>
+                </div>
+                <div v-else class="farsi">
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <ul class="nav navbar-nav navbar-left">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle has-avatar" data-toggle="dropdown">
+                                        <img class="img-responsive img-avatar" :src="user.photos[0].value" alt="Avatar"> {{ user.displayName }}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="#" data-toggle="modal" data-target="#tradelink" class="farsi">تغییر لینک مبادله</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="/logout" class="farsi">خروج</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <hr>
+                    <a href="#" class="farsi btn btn-success btn-lg btn-block" style="margin-top:130px;width:180px;" v-if=" ! disableTrade" v-on:click="sendOffer">← مبادله →</a>
+                    <a href="#" class="farsi btn btn-danger btn-lg btn-block" style="margin-top:130px;width:180px;" disabled v-else>ارزش کافی نیست</a>
+                </div>
+
+                <div v-if=" ! user" class="english">
+                    <div class="alert alert-info">
+                        <strong class="english">You need to sign in before you can send trades.</strong>
+                    </div>
+                </div>
+                <div v-else class="english">
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <ul class="nav navbar-nav navbar-left">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle has-avatar" data-toggle="dropdown">
+                                        <img class="img-responsive img-avatar" :src="user.photos[0].value" alt="Avatar"> {{ user.displayName }}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="#" data-toggle="modal" data-target="#tradelink" class="english">Change tradelink</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="/logout" class="english">Log out</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <hr>
+                    <a href="#" class="btn btn-success btn-lg btn-block" style="margin-top:130px;width:180px;" v-if=" ! disableTrade" v-on:click="sendOffer">← Trade →</a>
+                    <a href="#" class="btn btn-danger btn-lg btn-block" style="margin-top:130px;width:180px;" disabled v-else>Not enough value</a>
+                </div>
+                <hr>
+                <div v-if=" user" class="english">
+                    <a href="#" class="btn btn-success btn-lg btn-block english" style="margin-top:60px;width:180px;" v-on:click="reloadInventories" v-if=" ! disableReload">Reload</a>
+                    <a href="#" class="btn btn-danger btn-lg btn-blocken english" style="margin-top:60px;width:180px;" disabled v-else>Reload</a>
+                </div>
+                <div v-else class="english">
+                    <a href="#" class="btn btn-success btn-lg btn-block english" style="margin-top:340px;width:180px;" v-on:click="reloadInventories" v-if=" ! disableReload">Reload</a>
+                    <a href="#" class="btn btn-danger btn-lg btn-blocken english" style="margin-top:340px;width:180px;" disabled v-else>Reload</a>
+                </div>
+                <div v-if=" user" class="farsi">
+                    <a href="#" class="btn btn-success btn-lg btn-block farsi" style="margin-top:60px;width:180px;" v-on:click="reloadInventories" v-if=" ! disableReload">بارگیری مجدد</a>
+                    <a href="#" class="btn btn-danger btn-lg btn-block farsi" style="margin-top:60px;width:180px;" disabled v-else>بارگیری مجدد</a>
+                </div>
+                <div v-else class="farsi">
+                    <a href="#" class="btn btn-success btn-lg btn-block farsi" style="margin-top:340px;width:180px;" v-on:click="reloadInventories" v-if=" ! disableReload">بارگیری مجدد</a>
+                    <a href="#" class="btn btn-danger btn-lg btn-block farsi" style="margin-top:340px;width:180px;" disabled v-else>بارگیری مجدد</a>
+                </div>
+                <hr>
+                <div class="panel panel-default" style="margin-top: 135px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center farsi">نرخ بازار</h3>
+                        <h3 class="panel-title text-center english">Market Rates</h3>
+                    </div>
+                    <table class="table table-bordered table-condensed text-center">
+                        <tbody>
+                        <tr class="success">
+                            <td style="background-color:rgb(200, 250, 200);">{{ parseInt(rates.user.arcana * 100) }}%</td>
+                            <td style="background-color:rgb(200, 250, 200);">Arcana</td>
+                            <td style="background-color:rgb(200, 250, 200);">{{ parseInt(rates.bot.arcana * 100) }}%</td>
+                        </tr>
+                        <tr class="danger">
+                            <td style="background-color:#fee2b9;">{{ parseInt(rates.user.immortal * 100) }}%</td>
+                            <td style="background-color:#fee2b9;">Immortal</td>
+                            <td style="background-color:#fee2b9;">{{ parseInt(rates.bot.immortal * 100) }}%</td>
+                        </tr>
+                        <tr class="warning">
+                            <td style="background-color:#f5d1ff;">{{ parseInt(rates.user.rare_skin * 100) }}%</td>
+                            <td style="background-color:#f5d1ff;">Rare Skins</td>
+                            <td style="background-color:#f5d1ff;">{{ parseInt(rates.bot.rare_skin * 100) }}%</td>
+                        </tr>
+                        <tr class="info">
+                            <td style="background-color:#d1ebff;">{{ parseInt(rates.user.skins * 100) }}%</td>
+                            <td style="background-color:#d1ebff;">Skins</td>
+                            <td style="background-color:#d1ebff;">{{ parseInt(rates.bot.skins * 100) }}%</td>
+                        </tr>
+                        <tr class="active">
+                            <td style="background-color:#ffffff;">{{ parseInt(rates.user.misc * 100) }}%</td>
+                            <td style="background-color:#ffffff;">Misc</td>
+                            <td style="background-color:#ffffff;">{{ parseInt(rates.bot.misc * 100) }}%</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div v-if=" ! user" class="english">
+                    <div class="text-center" style="margin-top:35px;color:#d4d3d3;">
+                        <strong>{{ site.copyrights }}</strong>
+                        <div class="english">Prices and inventory loading provided by <a href="https://steamcommunity.com" target="_blank">SteamCommunity</a></div>
+                    </div>
+                </div>
+                <div v-else class="english">
+                    <div class="text-center" style="margin-top:35px;color:#d4d3d3;">
+                        <strong>{{ site.copyrights }}</strong>
+                        <div class="english">Prices and inventory loading provided by <a href="https://steamcommunity.com" target="_blank">SteamCommunity</a></div>
+                    </div>
+                </div>
+
+                <div v-if=" ! user" class="farsi">
+                    <div class="text-center" style="margin-top:35px;color:#d4d3d3;">
+                        <strong>{{ site.copyrights }}</strong>
+                        <div class="farsi">قیمت و بار موجودی ارائه شده توسط <a href="https://steamcommunity.com" target="_blank">SteamCommunity</a></div>
+                    </div>
+                </div>
+                <div v-else class="farsi">
+                    <div class="text-center" style="margin-top:35px;color:#d4d3d3;">
+                        <strong>{{ site.copyrights }}</strong>
+                        <div class="farsi">قیمت و بار موجودی ارائه شده توسط <a href="https://steamcommunity.com" target="_blank">SteamCommunity</a></div>
+                    </div>
+                </div>
+            </div>
+            <!--/.col-->
+            <div class="col-xs-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                                <span class="price">
+                                    <span class="well well-sm">${{ botInventorySelectedValue.toFixed(2) }}</span>
+                                </span>
+                            <span class="pull-right">
+                                    <span class="well well-sm farsi"><strong>آیتم انتخابی بات</strong></span>
+                                <span class="well well-sm english"><strong>Bot's offer</strong></span>
+                                </span>
+                        </h3>
+                    </div>
+                    <div class="dota-items">
+                        <div class="well text-center">
+                            <strong class="farsi">&#9660; .برای پاک کردن آیتم های انتخابی بر روی آن کلیک کنید &#9660;</strong>
+                            <strong class="english">&#9660; Select items below to remove them from the offer. &#9660;</strong>
+                        </div>
+                        <div class="dota-item dota-item--rare"
+                             :class="`dota-item--${item.item_type.name}`"
+                             v-for="item in botInventory"
+                             v-if="botInventorySelected.indexOf(item.assetid) !== -1"
+                             v-on:click="removeItem('bot', item.bot, item.assetid, item.price)"
+                        >
+                            <div class="dota-item--title">{{ item.data.market_hash_name }}</div>
+                            <div class="dota-item--st" v-if="item.data.market_hash_name.indexOf('StatTrak') !== -1">ST</div>
+                            <div class="dota-item--wear" v-if="item.item_wear">{{ item.item_wear }}</div>
+                            <div class="dota-item--price">${{ item.price }}</div>
+                            <div class="dota-item--bg" :style="`background-image:url(https://steamcommunity-a.akamaihd.net/economy/image/${item.data.image});`"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <div class="form-inline text-right">
+                                <div class="form-group pull-left">
+                                    <div class="input-group">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="farsi" v-on:click="activeBot('All Bots')">همه بات ها</a>
+                                                    <a class="english" v-on:click="activeBot('All Bots')">All Bots</a>
+                                                </li>
+                                                <li class="divider"></li>
+                                                <li>
+                                                    <a v-for="(bot, key) in botInventories" v-on:click="activeBot(key)" style="text-transform:capitalize;">{{ key.replace('_', ' ') }}</a>
+                                                </li>
+                                            </ul>
+                                            <a href="#" class="btn btn-default disabled" style="text-transform:capitalize;">{{ selectedBot.replace('_', ' ') }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Search For Items" v-on:keyup="searchInventory('bot', $event.target.value)">
+                                    <div class="input-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle farsi" data-toggle="dropdown">مرتب سازی با
+                                            <span class="caret"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default dropdown-toggle english" data-toggle="dropdown">Sort by
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <a class="farsi" v-on:click="setInventorySort('bot', true)">بالا ترین قیمت</a>
+                                                <a class="english" v-on:click="setInventorySort('bot', true)">Highest price</a>
+                                            </li>
+                                            <li>
+                                                <a class="farsi" v-on:click="setInventorySort('bot', false)">پایین ترین قیمت</a>
+                                                <a class="english" v-on:click="setInventorySort('bot', false)">Lowest price</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </h3>
+                    </div>
+                    <div class="dota-items high">
+                        <div class="well text-center">
+                            <strong class="farsi">&#9660; .آیتم مورد نظر خود را برای اضافه شدن به لیست پشنهادی بات انتخاب کنید &#9660;</strong>
+                            <strong class="english">&#9660; Select items below to place them in the offer. &#9660;</strong>
+                        </div>
+                        <div v-if=" ! botInventory.error && botInventory.length">
+                            <div class="dota-item dota-item--rare"
+                                 :class="`dota-item--${item.item_type.name}`"
+                                 v-for="item in botInventory"
+                                 v-if=" ! item.hidden && botInventorySelected.indexOf(item.assetid) === -1"
+                                 v-on:click="addItem('bot', item.bot, item.assetid, item.price)"
+                                 :disabled="item.price > (parseFloat(userInventorySelectedValue.toFixed(2)) - parseFloat(botInventorySelectedValue.toFixed(2)))"
+                            >
+                                <div class="dota-item--title" v-if="!floats[item.assetid] || !floats[item.assetid].paintwear">{{ item.data.market_hash_name }}</div>
+                                <div class="dota-item--title" v-else>{{ item.data.market_hash_name }}<br>
+                                    <div class="dota-item--float">Float: {{ floats[item.assetid].paintwear }}</div>
+                                </div>
+                                <div class="dota-item--st" v-if="item.data.market_hash_name.indexOf('StatTrak') !== -1">ST</div>
+                                <div class="dota-item--wear" v-if="item.item_wear">{{ item.item_wear }}</div>
+                                <div class="dota-item--price">${{ item.price }}</div>
+                                <div class="dota-item--bg" :style="`background-image:url(https://steamcommunity-a.akamaihd.net/economy/image/${item.data.image});`"></div>
+                            </div>
+                        </div>
+                        <div v-else-if="botInventory.error">
+                            <div v-if="botInventory.error.statusCode == 403">
+                                <div class="alert alert-danger" style="margin:0">
+                                    <strong class="farsi">پروفایل بات در تنظیمات شخصی قرار دارد, قابل مشاهده نیست inventory</strong>
+                                    <strong class="english">This bots profile or inventory settings are set to private. We can't acquire the items of its Dota 2 inventory.</strong>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div class="alert alert-danger">
+                                    <strong v-if="botInventory.error.error">{{ botInventory.error.error }}</strong>
+                                    <strong class="farsi" v-else>اشتباهی رخ داده لطفا دوباره تلاش کنید!</strong>
+                                    <strong class="english" v-else>Something went wrong.. please try again!</strong>
+                                    <span v-if="botInventory.error.statusCode">({{ botInventory.error.statusCode }})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="alert alert-info farsi"><img src="/static/img/load.gif" alt=""> ... لطفا صبر کنید</div>
+                            <div class="alert alert-info english"><img src="/static/img/load.gif" alt="">Please wait..</div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tradelink">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h3 class="farsi">لینک مبادله</h3>
+                    <h3 class="english">Trade link</h3>
+                    <div class="alert alert-danger" v-if="invalidTradelink">
+                        <strong class="farsi">لینک مبادله ناموجود</strong>
+                        <strong class="english">Invalid tradelink!</strong>
+                    </div>
+                    <h4 class="farsi"><a href="http://steamcommunity.com/id/me/tradeoffers/privacy#trade_offer_access_url" target="_blank">از کجا لینک مبادله را پیدا کنم ؟</a></h4>
+                    <h4 class="english"><a href="http://steamcommunity.com/id/me/tradeoffers/privacy#trade_offer_access_url" target="_blank">Where do I find this?</a></h4>
+                    <input type="text" class="form-control" v-model="user.tradelink">
+                    <hr style="opacity:0; margin: 7.5px 0;">
+                    <a class="btn btn-primary btn-lg farsi" v-on:click="updateTradelink">بروز رسانی</a>
+                    <a class="btn btn-primary btn-lg english" v-on:click="updateTradelink">Update</a>
+                    <hr>
+                    <p class="farsi">.با اضافه کردن آدرس مبادله استیم شما امکانی برای رباتهای ما برای ارائه یک پیشنهاد مبادله بدون نیاز به اضافه کردن شما به عنوان دوست در استیم فراهم می سازید</p>
+                    <p class="farsi">این مبادله ها کاملا امن هست چرا که هیچ آیتمی بدون تایید و بازبینی شما از صفحه استیم شما مبادله نمی شود.</p>
+                    <p class="english">By adding your Steam Trade url you make it possible for our bots to send you a trade offer without the need of adding you as a friend on steam.</p>
+                    <p class="english">This is totally safe and no items can be traded before you have inspected and accepted the offer from your steam page.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tradeoffer">
+        <div v-if="userLanguage === 'English'" class="modal-dialog en">
+            <div class="modal-content en fa">
+                <div class="modal-body en fa">
+                    <h3>Trade status</h3>
+                    <div class="alert alert-info en fa" v-if=" ! offerStatus.error && offerStatus.status != 3">
+                        <strong class="en fa" v-if="offerStatus.status == 4"><img src="/static/img/load.gif" alt=""> Validating requested trade..</strong>
+                        <strong class="en fa" v-if="offerStatus.status == 1"><img src="/static/img/load.gif" alt=""> Preparing to send offer..</strong>
+                        <strong class="en fa" v-if="offerStatus.status == 2"><img src="/static/img/load.gif" alt=""> Confirming sent offer..</strong>
+                    </div>
+                    <div class="en fa" v-else-if=" ! offerStatus.error && offerStatus.status == 3">
+                        <div class="alert alert-success en fa">
+                            <strong class="en fa">Requested trade has been sent successfully!
+                                <a class="en fa" :href="`http://steamcommunity.com/tradeoffer/${offerStatus.offer}`" target="_blank">Click here to open the trade offer.</a>
+                            </strong>
+                        </div>
+                        <div class="alert alert-warning en fa">This trade offer will expire in <strong>10 minutes</strong>.</div>
+                    </div>
+                    <div v-else>
+                        <strong class="en fa" v-if="offerStatus.error.code === 429">We are being rate-limited and could not send the offer. Please try again later.</strong>
+                        <strong v-else>{{ offerStatus.error }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="userLanguage === 'Farsi'" class="modal-dialog farsi">
+            <div class="modal-content farsi">
+                <div class="modal-body farsi fa">
+                    <h3>وضعیت تبادل</h3>
+                    <div class="alert alert-info fa farsi" v-if=" ! offerStatus.error && offerStatus.status != 3">
+                        <strong class="fa farsi" v-if="offerStatus.status == 4"><img src="/static/img/load.gif" alt="">..بررسی معتبر بودن تبادل مورد نظر</strong>
+                        <strong class="fa farsi" v-if="offerStatus.status == 1"><img src="/static/img/load.gif" alt="">..آماده ارسال پیشنهاد</strong>
+                        <strong class="fa farsi" v-if="offerStatus.status == 2"><img src="/static/img/load.gif" alt="">..تأیید پیشنهاد ارسالی</strong>
+                    </div>
+                    <div class="fa farsi" v-else-if=" ! offerStatus.error && offerStatus.status == 3">
+                        <div class="alert alert-success fa farsi">
+                            <strong class="fa farsi">!تجارت درخواست شده با موفقیت ارسال شد
+                                <a class="fa farsi" :href="`http://steamcommunity.com/tradeoffer/${offerStatus.offer}`" target="_blank">.برای باز کردن پیشنهاد تبادل اینجا کلیک کنید</a>
+                            </strong>
+                        </div>
+                        <div class="alert alert-warning farsi fa">این پیشنهاد تعادل تا <strong>10 دقیقه</strong>.دیگر منقضی میشود</div>
+                    </div>
+                    <div v-else>
+                        <strong class="farsi fa" v-if="offerStatus.error.code === 429">.لطفا بعدا دوباره امتحان کنید</strong>
+                        <strong v-else>{{ offerStatus.error }}</strong>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.min.js"></script>
+<script src="static/js/app2.js?v=19"></script>
+<script src="static/js/app.js?v=19"></script>
+
+<script type="text/javascript">
+
+    let Language = 'Farsi';
+    function validate()
+    {
+        if (document.getElementById('language').checked)
+        {
+            Language = 'English';
+            for (let el of document.querySelectorAll('.english'))
+                    el.style.display = null;
+            for(let en of document.querySelectorAll('.farsi'))
+                en.style.display = 'none';
+            userLanguage = 'English';
+        }
+        else
+        {
+            Language = 'Farsi';
+            for (let el of document.querySelectorAll('.farsi'))
+                    el.style.display = null;
+            for(let en of document.querySelectorAll('.english'))
+                en.style.display = 'none';
+            userLanguage = 'Farsi';
+        }
+    }
+    function StartUp() {
+        Language = 'Farsi';
+        $('body').toggleClass('loaded');
+        $(document).ready(function() {
+            setTimeout(function(){
+                $('body').addClass('loaded');
+                $('header').removeClass('application');
+                $('div').removeClass('application');
+            }, 5000);
+
+        });
+
+        $("#outer").click(function(){
+            $(".power").toggleClass("on");
+        });
+
+        for (let el of document.querySelectorAll('.farsi'))
+            el.style.display = null;
+        for (let en of document.querySelectorAll('.english'))
+            en.style.display = 'none';
+        userLanguage = 'Farsi';
+    }
+    window.onload = StartUp;
+
+</script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','static/js/analytics.js','ga');
+    ga('create', 'UA-90308432-1', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>
